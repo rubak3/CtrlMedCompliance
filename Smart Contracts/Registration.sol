@@ -56,12 +56,12 @@ contract Registration {
         emit NCAAdded(NCAaddr, ISO);
     }
 
-    function requestReg(address addr, bytes3 ISO, Role role, bytes32 ipfsHash) public {
-        require(!registeredActors[addr].registered, "You are already registered");
-        registeredActors[addr].role = role;
-        registeredActors[addr].countryISO = ISO;
-        registeredActors[addr].ipfsHash = ipfsHash;
-        emit ActorRequestedToRegister(addr);
+    function requestReg(bytes3 ISO, Role role, bytes32 ipfsHash) public {
+        require(!registeredActors[msg.sender].registered, "You are already registered");
+        registeredActors[msg.sender].role = role;
+        registeredActors[msg.sender].countryISO = ISO;
+        registeredActors[msg.sender].ipfsHash = ipfsHash;
+        emit ActorRequestedToRegister(msg.sender);
     }
 
     function approveReg(address addr, uint256 licenseId, uint256 expiryDate) public onlyNCA(addr){
@@ -108,6 +108,10 @@ contract Registration {
 
     function getNCACountry(address addr) public view returns (bytes3) {
         return registeredNCAs[addr].countryISO;
+    }
+
+    function getLicenseIpfsHash(address addr) public view returns (bytes32) {
+        return registeredActors[addr].ipfsHash;
     }
 
 }
